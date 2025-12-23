@@ -1,14 +1,14 @@
 ---
-description: Interactive setup verification for jacob-plan and jacob-work prerequisites
+description: Interactive setup verification for istari-plan and istari-work prerequisites
 ---
 
 # Setup Command
 
-When the user types the `/jacob-setup` command, verify all required tools and plugins are installed and properly configured.
+When the user types the `/istari-setup` command, verify all required tools and plugins are installed and properly configured.
 
 ## Overview
 
-This command performs a comprehensive health check of your AI coding environment, ensuring all prerequisites for `/jacob-plan` and `/jacob-work` are satisfied.
+This command performs a comprehensive health check of your AI coding environment, ensuring all prerequisites for `/istari-plan` and `/istari-work` are satisfied.
 
 **Tools Verified and Installed:**
 - Language runtimes (bun, rust, go, uv)
@@ -785,15 +785,15 @@ if [ $INSTALLED -eq $TOTAL ]; then
   echo "Next steps:"
   echo "1. Verify Claude Code plugins (Superpowers, Compound Engineering, Context7)"
   echo "2. Configure Atlassian MCP server in Claude Code settings"
-  echo "3. Run '/jacob-plan <ticket-or-description>' to start planning!"
+  echo "3. Run '/istari-plan <ticket-or-description>' to start planning!"
 else
   echo "⚠️  Some tools are missing. Review the checks above."
   echo ""
-  echo "Critical for /jacob-plan:"
+  echo "Critical for /istari-plan:"
   echo "  - beads, beads_viewer (task management)"
   echo "  - Superpowers, Compound Engineering (planning)"
   echo ""
-  echo "Critical for /jacob-work:"
+  echo "Critical for /istari-work:"
   echo "  - All of the above"
   echo "  - mcp_agent_mail, ultimate_bug_scanner, cass_memory_system, coding_agent_session_search"
   echo "  - copilot (oracle)"
@@ -1024,4 +1024,4 @@ Setup is complete when:
 - ✅ Claude Code config has maxTokens: 200000 set
 - ✅ Test project has `.beads/` directory after `bd init`
 
-**Ready to code!** Run `/jacob-plan <description>` to start your first planning session.
+**Ready to code!** Run `/istari-plan <description>` to start your first planning session.

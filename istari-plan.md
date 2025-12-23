@@ -4,7 +4,7 @@ description: Intelligent planning command that decomposes Jira tickets into acti
 
 # Plan Command
 
-When the user types the `/jacob-plan` command, activate planning mode and execute the full planning workflow.
+When the user types the `/istari-plan` command, activate planning mode and execute the full planning workflow.
 
 ## Overview
 
@@ -22,7 +22,7 @@ Assumes all required tools are installed:
 - Atlassian MCP server (Jira integration & Confluence wiki access)
 - CLI utilities: ripgrep (rg), fzf, ast-grep (sg), jq
 
-**Run `/jacob-setup` first to install all prerequisites.**
+**Run `/istari-setup` first to install all prerequisites.**
 
 **Copilot Configuration:**
 Set preferred model in copilot config file:

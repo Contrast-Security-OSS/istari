@@ -4,7 +4,7 @@ description: Autonomous software development agent that executes beads with TDD,
 
 # Work Command
 
-When the user types the `/jacob-work` command, activate autonomous development mode and execute beads with full quality gates.
+When the user types the `/istari-work` command, activate autonomous development mode and execute beads with full quality gates.
 
 ## Overview
 
@@ -29,7 +29,7 @@ Assumes all required tools are installed:
 - CLI utilities: ripgrep (rg), fzf, ast-grep (sg), jq
 - Git tools: git, gh, lazygit
 
-**Run `/jacob-setup` first to install all prerequisites.**
+**Run `/istari-setup` first to install all prerequisites.**
 
 **Copilot Configuration:**
 Set preferred model in copilot config file:
