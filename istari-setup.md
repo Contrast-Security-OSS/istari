@@ -738,6 +738,7 @@ echo ""
 echo "Claude Code Plugins:"
 [ -d ~/.claude/plugins/cache/superpowers-marketplace/superpowers ] && echo "  ✅ Superpowers" || echo "  ❌ Superpowers"
 [ -d ~/.claude/plugins/cache/every-marketplace/compound-engineering ] && echo "  ✅ Compound Engineering" || echo "  ❌ Compound Engineering"
+[ -d ~/.claude/plugins/cache/cc-marketplace/safety-net ] && echo "  ✅ Safety Net" || echo "  ❌ Safety Net"
 
 echo ""
 echo "MCP Servers:"
@@ -751,7 +752,7 @@ echo "=========================================="
 ```bash
 # Count installed tools
 INSTALLED=0
-TOTAL=23
+TOTAL=24
 
 command -v bun &>/dev/null && ((INSTALLED++))
 command -v cargo &>/dev/null && ((INSTALLED++))
@@ -772,6 +773,7 @@ command -v cm &>/dev/null && ((INSTALLED++))
 command -v cass &>/dev/null && ((INSTALLED++))
 command -v am &>/dev/null && ((INSTALLED++))
 command -v copilot &>/dev/null && ((INSTALLED++))
+[ -d ~/.claude/plugins/cache/cc-marketplace/safety-net ] && ((INSTALLED++))
 
 PERCENTAGE=$((INSTALLED * 100 / TOTAL))
 
@@ -1018,6 +1020,7 @@ Setup is complete when:
 - ✅ Agent mail server is running on :8765
 - ✅ Superpowers plugin is installed in `~/.claude/plugins/cache/superpowers-marketplace/`
 - ✅ Compound Engineering is installed in `~/.claude/plugins/cache/every-marketplace/`
+- ✅ Safety Net is installed in `~/.claude/plugins/cache/cc-marketplace/`
 - ✅ Context7 MCP server is configured in `~/.claude.json`
 - ✅ Atlassian MCP server is configured and authenticated (run `/mcp` if needed)
 - ✅ Copilot config file exists with preferred model and maxTokens: 8192
