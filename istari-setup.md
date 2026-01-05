@@ -615,6 +615,34 @@ fi
 echo ""
 ```
 
+**Safety Net (Command Protection):**
+```bash
+echo "📦 Claude Code Safety Net Plugin:"
+echo ""
+
+# Check if safety-net is available
+if [ -d ~/.claude/plugins/cache/cc-marketplace/safety-net ]; then
+  echo "✅ Safety Net: installed"
+else
+  echo "❌ Safety Net: Not installed"
+  echo ""
+  echo "Installing Safety Net plugin (protects against destructive commands)..."
+  read -p "Install Safety Net now? (y/n) " -n 1 -r
+  echo ""
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Running: claude plugin marketplace add kenryu42/cc-marketplace"
+    claude plugin marketplace add kenryu42/cc-marketplace
+    echo ""
+    echo "Running: claude plugin install safety-net@cc-marketplace"
+    claude plugin install safety-net@cc-marketplace
+    echo ""
+    echo "✅ Safety Net installed in standard mode!"
+    echo "   Blocks: force pushes, branch deletions, hard resets, dangerous file operations"
+  fi
+fi
+echo ""
+```
+
 ### 8. MCP Servers
 
 **Context7 MCP Server (Documentation context provider):**
