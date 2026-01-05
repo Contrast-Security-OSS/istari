@@ -2,7 +2,7 @@
 
 **Date:** 2025-01-05
 **Status:** Ready for Implementation
-**Jira Project:** AIML
+**Jira Ticket:** [AIML-347](https://contrast.atlassian.net/browse/AIML-347)
 
 ## Overview
 
@@ -238,9 +238,9 @@ Not in scope for initial integration, but possible future work:
 - Istari README: `/Users/jacobmages-haskins/jacob-dev/istari/README.md`
 - Istari Setup: `/Users/jacobmages-haskins/jacob-dev/istari/istari-setup.md`
 
-## Jira Ticket Details
+## Jira Ticket
 
-**Create manually in AIML project:**
+**Ticket:** [AIML-347](https://contrast.atlassian.net/browse/AIML-347)
 
 **Title:** Integrate claude-code-safety-net plugin into Istari
 
