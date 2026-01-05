@@ -67,6 +67,7 @@ Istari establishes a comprehensive AI coding environment by integrating:
 - **Copilot CLI** - Oracle for complex queries (defaults to grok-code-fast-1 for speed)
 - **Superpowers** - Claude Code plugin for TDD guidance and code review
 - **Compound Engineering** - Claude Code plugin for plan expansion
+- **Safety Net** - Claude Code plugin preventing destructive git/filesystem commands
 - **Context7** - MCP server providing up-to-date library documentation (requires API key)
 - **Atlassian** - MCP server for Jira/Confluence integration (OAuth)
 
@@ -75,8 +76,9 @@ This toolchain enables **autonomous multi-agent execution** where multiple Claud
 1. Work in parallel without conflicts (via agent_mail file reservations)
 2. Make informed decisions (via Context7, Confluence, procedural memory)
 3. Maintain quality (via TDD, bug scanning, multi-tool reviews)
-4. Learn and improve (via daily learning files shared across agents)
-5. Consult oracles when stuck (via Copilot CLI)
+4. **Operate safely (via Safety Net blocking destructive commands)**
+5. Learn and improve (via daily learning files shared across agents)
+6. Consult oracles when stuck (via Copilot CLI)
 
 ## Setup Instructions
 
@@ -377,6 +379,12 @@ Both systems are **automatically consulted** at the start of each `/istari-plan`
 - Section 6 of `/istari-work` is **MANDATORY**
 - Agents must run ALL 4 reviews before commit
 - Check success criteria checklist at end of work session
+
+**Safety Net blocking legitimate commands:**
+- Review the command that was blocked in the error message
+- If it's a false positive, you can customize rules via JSON config
+- See https://github.com/kenryu42/claude-code-safety-net#configuration
+- For one-time overrides, you can temporarily disable the plugin in Claude Code settings
 
 ## Contributing
 
