@@ -643,6 +643,27 @@ fi
 echo ""
 ```
 
+**Troubleshooting Safety Net:**
+
+If you see errors like `PreToolUse:Bash says: Plugin hook "npx -y cc-safety-net --claude-code" failed to start`, the plugin may be in an orphaned state:
+
+```bash
+# Uninstall and reinstall the plugin
+claude plugin uninstall safety-net@cc-marketplace
+claude plugin install safety-net@cc-marketplace
+
+# Verify it works (should see no error)
+echo "Testing safety-net"
+```
+
+**What causes this issue:**
+- Plugin directory missing the compiled `dist/` folder
+- Hook tries to run but binary doesn't exist locally
+- npx attempts to fetch from npm and fails with SSL certificate errors
+- Commands still execute, but you see error messages before each Bash tool use
+
+**Note:** The plugin was likely marked as orphaned (check `.orphaned_at` file in plugin directory). A clean reinstall resolves this by fetching a complete version of the plugin.
+
 ### 8. MCP Servers
 
 **Context7 MCP Server (Documentation context provider):**
