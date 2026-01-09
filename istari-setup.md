@@ -16,6 +16,7 @@ This command performs a comprehensive health check of your AI coding environment
 - Git infrastructure (git, gh)
 - AI coding tools (beads, abacus, beads_viewer, ultimate_bug_scanner, cass_memory_system, coding_agent_session_search)
 - Agent coordination (mcp_agent_mail)
+- Command protection (destructive_command_guard) - **Blocks destructive git, filesystem, database operations**
 - Oracles (copilot) - **Configured with maxTokens: 8192**
 - Claude Code configuration - **maxTokens: 200000 for extended context**
 - Claude Code plugins (Superpowers, Compound Engineering) - **Interactive installation**
@@ -459,15 +460,16 @@ if command -v copilot &> /dev/null; then
       echo "   Max tokens: $(cat ~/.copilot/config.json | grep -o '"maxTokens"[^,]*' | grep -o '[0-9]*')"
     else
       echo "⚠️  copilot: maxTokens not configured"
-      read -p "Set maxTokens to 8192? (y/n) " -n 1 -r
-      echo ""
-      if [[ $REPLY =~ ^[Yy]$ ]]; then
-        # Backup existing config
-        cp ~/.copilot/config.json ~/.copilot/config.json.bak
-        # Add maxTokens if not present
+      echo "   Adding maxTokens: 8192"
+      # Backup existing config
+      cp ~/.copilot/config.json ~/.copilot/config.json.bak
+      # Add maxTokens if not present (requires jq)
+      if command -v jq &> /dev/null; then
         cat ~/.copilot/config.json | jq '. + {maxTokens: 8192}' > ~/.copilot/config.json.tmp
         mv ~/.copilot/config.json.tmp ~/.copilot/config.json
         echo "✅ maxTokens set to 8192"
+      else
+        echo "⚠️  jq not installed. Please manually add '\"maxTokens\": 8192' to ~/.copilot/config.json"
       fi
     fi
   else
@@ -615,33 +617,170 @@ fi
 echo ""
 ```
 
-**Safety Net (Command Protection):**
+**Destructive Command Guard (Command Protection):**
 ```bash
-echo "📦 Claude Code Safety Net Plugin:"
+echo "🛡️  Destructive Command Guard:"
 echo ""
 
-# Check if safety-net is available
-if [ -d ~/.claude/plugins/cache/cc-marketplace/safety-net ]; then
-  echo "✅ Safety Net: installed"
+# Check if dcg is installed
+if command -v dcg &> /dev/null; then
+  echo "✅ dcg (destructive_command_guard): $(dcg --version 2>/dev/null || echo 'installed')"
+
+  # Check if config exists
+  if [ -f ~/.config/dcg/config.toml ]; then
+    echo "✅ dcg: Config file exists"
+  else
+    echo "⚠️  dcg: No config file"
+    echo "   Creating default config with recommended packs..."
+    mkdir -p ~/.config/dcg
+    cat > ~/.config/dcg/config.toml << 'EOF'
+[packs]
+enabled = [
+ "git.destructive",
+ "filesystem.dangerous",
+ "database.postgresql",
+ "containers.docker"
+]
+EOF
+    echo "✅ Config created with essential protection packs"
+  fi
 else
-  echo "❌ Safety Net: Not installed"
+  echo "❌ dcg: Not installed"
   echo ""
-  echo "Installing Safety Net plugin (protects against destructive commands)..."
-  read -p "Install Safety Net now? (y/n) " -n 1 -r
+  echo "Destructive Command Guard prevents accidental destructive commands."
+  echo "It protects against:"
+  echo "  - Destructive git operations (hard reset, force push)"
+  echo "  - Dangerous filesystem commands (rm -rf)"
+  echo "  - Database table/collection drops"
+  echo "  - Container/Kubernetes deletions"
+  echo ""
+  read -p "Install dcg now? (y/n) " -n 1 -r
   echo ""
   if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Running: claude plugin marketplace add kenryu42/cc-marketplace"
-    claude plugin marketplace add kenryu42/cc-marketplace
+    echo "Installing destructive_command_guard..."
+    curl -fsSL "https://raw.githubusercontent.com/Dicklesworthstone/destructive_command_guard/master/install.sh?$(date +%s)" | bash
+
+    # Create default config
+    mkdir -p ~/.config/dcg
+    cat > ~/.config/dcg/config.toml << 'EOF'
+[packs]
+enabled = [
+ "git.destructive",
+ "filesystem.dangerous",
+ "database.postgresql",
+ "containers.docker"
+]
+EOF
     echo ""
-    echo "Running: claude plugin install safety-net@cc-marketplace"
-    claude plugin install safety-net@cc-marketplace
-    echo ""
-    echo "✅ Safety Net installed in standard mode!"
-    echo "   Blocks: force pushes, branch deletions, hard resets, dangerous file operations"
+    echo "✅ dcg installed and configured!"
+    echo "   Config: ~/.config/dcg/config.toml"
+    echo "   Protection enabled for git, filesystem, database, and containers"
   fi
+fi
+
+# Configure Claude Code hook
+echo "Configuring Claude Code PreToolUse hook..."
+SETTINGS_FILE="$HOME/.claude/settings.json"
+
+if [ -f "$SETTINGS_FILE" ]; then
+  # Check if dcg hook is already configured
+  if grep -q '"command".*"dcg"' "$SETTINGS_FILE"; then
+    echo "✅ dcg hook already configured in Claude Code"
+  else
+    echo "⚠️  dcg installed but not configured as Claude Code hook"
+    read -p "Add dcg as PreToolUse hook in Claude Code? (y/n) " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      # Backup settings
+      cp "$SETTINGS_FILE" "$SETTINGS_FILE.bak"
+
+      # Add hook configuration using jq
+      if command -v jq &> /dev/null; then
+        # Check if hooks section exists
+        if jq -e '.hooks' "$SETTINGS_FILE" > /dev/null 2>&1; then
+          # Hooks exist, add to PreToolUse
+          jq '.hooks.PreToolUse += [{"matcher": "Bash", "hooks": [{"type": "command", "command": "dcg"}]}]' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
+          mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+        else
+          # No hooks section, create it
+          jq '. + {"hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "dcg"}]}]}}' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
+          mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+        fi
+        echo "✅ dcg hook configured in Claude Code"
+        echo "   Hook will activate on next Claude Code session"
+      else
+        echo "⚠️  jq not installed. Please manually add to $SETTINGS_FILE:"
+        echo ''
+        cat << 'EOF'
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dcg"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+        echo ''
+      fi
+    fi
+  fi
+else
+  echo "⚠️  $SETTINGS_FILE not found"
+  echo "   Claude Code settings file will be created on first run"
+  echo "   After running Claude Code once, manually add this to $SETTINGS_FILE:"
+  echo ''
+  cat << 'EOF'
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dcg"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+  echo ''
 fi
 echo ""
 ```
+
+**Configuring Destructive Command Guard:**
+
+The protection system uses modular "packs" that can be enabled/disabled in `~/.config/dcg/config.toml`:
+
+```toml
+[packs]
+enabled = [
+ "git.destructive",          # Blocks: git reset --hard, git push --force
+ "filesystem.dangerous",     # Blocks: rm -rf, dangerous deletes
+ "database.postgresql",      # Blocks: DROP TABLE, TRUNCATE
+ "database.mongodb",         # Blocks: dropDatabase, dropCollection
+ "containers.docker",        # Blocks: docker rm, docker system prune
+ "kubernetes"                # Blocks: kubectl delete
+]
+```
+
+**How it works:**
+- Uses a "whitelist-first" architecture for safety
+- Scans commands (including heredocs) before execution
+- Provides interactive prompts for blocked operations
+- Zero performance overhead when commands are safe
+- Can be temporarily bypassed with environment variables when needed
 
 ### 8. MCP Servers
 
@@ -766,7 +905,10 @@ echo ""
 echo "Claude Code Plugins:"
 [ -d ~/.claude/plugins/cache/superpowers-marketplace/superpowers ] && echo "  ✅ Superpowers" || echo "  ❌ Superpowers"
 [ -d ~/.claude/plugins/cache/every-marketplace/compound-engineering ] && echo "  ✅ Compound Engineering" || echo "  ❌ Compound Engineering"
-[ -d ~/.claude/plugins/cache/cc-marketplace/safety-net ] && echo "  ✅ Safety Net" || echo "  ❌ Safety Net"
+
+echo ""
+echo "Command Protection:"
+command -v dcg &>/dev/null && echo "  ✅ destructive_command_guard" || echo "  ❌ destructive_command_guard"
 
 echo ""
 echo "MCP Servers:"
@@ -801,7 +943,7 @@ command -v cm &>/dev/null && ((INSTALLED++))
 command -v cass &>/dev/null && ((INSTALLED++))
 command -v am &>/dev/null && ((INSTALLED++))
 command -v copilot &>/dev/null && ((INSTALLED++))
-[ -d ~/.claude/plugins/cache/cc-marketplace/safety-net ] && ((INSTALLED++))
+command -v dcg &>/dev/null && ((INSTALLED++))
 
 PERCENTAGE=$((INSTALLED * 100 / TOTAL))
 
@@ -1048,7 +1190,7 @@ Setup is complete when:
 - ✅ Agent mail server is running on :8765
 - ✅ Superpowers plugin is installed in `~/.claude/plugins/cache/superpowers-marketplace/`
 - ✅ Compound Engineering is installed in `~/.claude/plugins/cache/every-marketplace/`
-- ✅ Safety Net is installed in `~/.claude/plugins/cache/cc-marketplace/`
+- ✅ Destructive Command Guard (dcg) is installed and configured at `~/.config/dcg/config.toml`
 - ✅ Context7 MCP server is configured in `~/.claude.json`
 - ✅ Atlassian MCP server is configured and authenticated (run `/mcp` if needed)
 - ✅ Copilot config file exists with preferred model and maxTokens: 8192

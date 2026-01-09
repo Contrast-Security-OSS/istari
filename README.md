@@ -67,16 +67,18 @@ Istari establishes a comprehensive AI coding environment by integrating:
 - **Copilot CLI** - Oracle for complex queries (defaults to grok-code-fast-1 for speed)
 - **Superpowers** - Claude Code plugin for TDD guidance and code review
 - **Compound Engineering** - Claude Code plugin for plan expansion
-- **Safety Net** - Claude Code plugin preventing destructive git/filesystem commands
 - **Context7** - MCP server providing up-to-date library documentation (requires API key)
 - **Atlassian** - MCP server for Jira/Confluence integration (OAuth)
+
+### Command Protection
+- **Destructive Command Guard (dcg)** - Rust CLI tool preventing destructive git/filesystem/database operations
 
 ### Purpose
 This toolchain enables **autonomous multi-agent execution** where multiple Claude instances can:
 1. Work in parallel without conflicts (via agent_mail file reservations)
 2. Make informed decisions (via Context7, Confluence, procedural memory)
 3. Maintain quality (via TDD, bug scanning, multi-tool reviews)
-4. **Operate safely (via Safety Net blocking destructive commands)**
+4. **Operate safely (via Destructive Command Guard blocking dangerous operations)**
 5. Learn and improve (via daily learning files shared across agents)
 6. Consult oracles when stuck (via Copilot CLI)
 
@@ -380,11 +382,11 @@ Both systems are **automatically consulted** at the start of each `/istari-plan`
 - Agents must run ALL 4 reviews before commit
 - Check success criteria checklist at end of work session
 
-**Safety Net blocking legitimate commands:**
+**Destructive Command Guard blocking legitimate commands:**
 - Review the command that was blocked in the error message
-- If it's a false positive, you can customize rules via JSON config
-- See https://github.com/kenryu42/claude-code-safety-net#configuration
-- For one-time overrides, you can temporarily disable the plugin in Claude Code settings
+- If it's a false positive, you can customize protection packs in `~/.config/dcg/config.toml`
+- See https://github.com/Dicklesworthstone/destructive_command_guard for configuration details
+- Disable specific packs or use environment variables for one-time overrides
 
 ## Contributing
 
