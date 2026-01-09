@@ -460,15 +460,16 @@ if command -v copilot &> /dev/null; then
       echo "   Max tokens: $(cat ~/.copilot/config.json | grep -o '"maxTokens"[^,]*' | grep -o '[0-9]*')"
     else
       echo "⚠️  copilot: maxTokens not configured"
-      read -p "Set maxTokens to 8192? (y/n) " -n 1 -r
-      echo ""
-      if [[ $REPLY =~ ^[Yy]$ ]]; then
-        # Backup existing config
-        cp ~/.copilot/config.json ~/.copilot/config.json.bak
-        # Add maxTokens if not present
+      echo "   Adding maxTokens: 8192"
+      # Backup existing config
+      cp ~/.copilot/config.json ~/.copilot/config.json.bak
+      # Add maxTokens if not present (requires jq)
+      if command -v jq &> /dev/null; then
         cat ~/.copilot/config.json | jq '. + {maxTokens: 8192}' > ~/.copilot/config.json.tmp
         mv ~/.copilot/config.json.tmp ~/.copilot/config.json
         echo "✅ maxTokens set to 8192"
+      else
+        echo "⚠️  jq not installed. Please manually add '\"maxTokens\": 8192' to ~/.copilot/config.json"
       fi
     fi
   else
@@ -675,6 +676,85 @@ EOF
     echo "   Config: ~/.config/dcg/config.toml"
     echo "   Protection enabled for git, filesystem, database, and containers"
   fi
+fi
+
+# Configure Claude Code hook
+echo "Configuring Claude Code PreToolUse hook..."
+SETTINGS_FILE="$HOME/.claude/settings.json"
+
+if [ -f "$SETTINGS_FILE" ]; then
+  # Check if dcg hook is already configured
+  if grep -q '"command".*"dcg"' "$SETTINGS_FILE"; then
+    echo "✅ dcg hook already configured in Claude Code"
+  else
+    echo "⚠️  dcg installed but not configured as Claude Code hook"
+    read -p "Add dcg as PreToolUse hook in Claude Code? (y/n) " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      # Backup settings
+      cp "$SETTINGS_FILE" "$SETTINGS_FILE.bak"
+
+      # Add hook configuration using jq
+      if command -v jq &> /dev/null; then
+        # Check if hooks section exists
+        if jq -e '.hooks' "$SETTINGS_FILE" > /dev/null 2>&1; then
+          # Hooks exist, add to PreToolUse
+          jq '.hooks.PreToolUse += [{"matcher": "Bash", "hooks": [{"type": "command", "command": "dcg"}]}]' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
+          mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+        else
+          # No hooks section, create it
+          jq '. + {"hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "dcg"}]}]}}' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
+          mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+        fi
+        echo "✅ dcg hook configured in Claude Code"
+        echo "   Hook will activate on next Claude Code session"
+      else
+        echo "⚠️  jq not installed. Please manually add to $SETTINGS_FILE:"
+        echo ''
+        cat << 'EOF'
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dcg"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+        echo ''
+      fi
+    fi
+  fi
+else
+  echo "⚠️  $SETTINGS_FILE not found"
+  echo "   Claude Code settings file will be created on first run"
+  echo "   After running Claude Code once, manually add this to $SETTINGS_FILE:"
+  echo ''
+  cat << 'EOF'
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dcg"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+  echo ''
 fi
 echo ""
 ```
