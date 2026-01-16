@@ -69,9 +69,9 @@ Use Atlassian MCP server to fetch ticket details:
 
 **Query procedural memory:**
 ```bash
-cm recall "planning best practices"
-cm recall "project architecture decisions"
-cm recall "past Jira ticket patterns"
+cm context "planning best practices" --json
+cm context "project architecture decisions" --json
+cm context "past Jira ticket patterns" --json
 ```
 
 **Review recent learnings:**
@@ -290,8 +290,8 @@ EOF
 
 **Store in procedural memory:**
 ```bash
-cm learn "For <ticket-type> tickets, always consider <key-insight>"
-cm learn "<architectural-decision> because <reasoning>"
+# After completing planning, reflect on the session to extract learnings
+cm reflect --json
 ```
 
 ### 9. Summary & Handoff

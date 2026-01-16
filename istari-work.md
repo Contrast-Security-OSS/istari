@@ -47,10 +47,10 @@ Set preferred model in copilot config file:
 
 **Load procedural memory:**
 ```bash
-cm recall "coding standards"
-cm recall "testing patterns"
-cm recall "common pitfalls"
-cm recall "project conventions"
+cm context "coding standards" --json
+cm context "testing patterns" --json
+cm context "common pitfalls" --json
+cm context "project conventions" --json
 ```
 
 **Review recent learnings:**
@@ -488,8 +488,8 @@ EOF
 
 **Store in procedural memory:**
 ```bash
-cm learn "For <problem-type>, use <solution-pattern> because <reason>"
-cm learn "Avoid <anti-pattern> - causes <issue>"
+# After completing work, reflect on the session to extract learnings
+cm reflect --json
 ```
 
 **Commit learnings:**

@@ -1032,9 +1032,10 @@ Initialize procedural memory for new projects:
 ```bash
 cd ~/your-project
 cm init
-cm learn "Project conventions: <describe-conventions>"
-cm learn "Testing strategy: <describe-testing>"
-cm learn "Architecture: <describe-architecture>"
+
+# Note: Knowledge accumulates naturally through work sessions
+# Use 'cm reflect --json' after coding sessions to extract learnings
+# Use 'cm context "<topic>" --json' to query existing knowledge
 ```
 
 ### Beads Initialization
