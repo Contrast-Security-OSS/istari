@@ -242,7 +242,11 @@ echo ""
 
 REVIEW_4_OUTPUT=$(mktemp)
 
-/compound-engineering:workflows:review 2>&1 | tee "$REVIEW_4_OUTPUT"
+# Note: Use the workflow:review slash command
+echo "Invoking Compound Engineering multi-agent review workflow..."
+echo "Command: /workflow:review <PR-URL>"
+echo ""
+echo "This workflow launches multiple specialized review agents in parallel."
 
 echo ""
 ```
