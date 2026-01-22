@@ -240,13 +240,23 @@ echo "[4/5] Compound Engineering Review"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-REVIEW_4_OUTPUT=$(mktemp)
+# Launch specialized review agents in parallel
+# DO NOT use /workflow:review - that creates todo files
+# Instead, launch agents directly and present findings on screen
 
-# Note: Use the workflow:review slash command
-echo "Invoking Compound Engineering multi-agent review workflow..."
-echo "Command: /workflow:review <PR-URL>"
+echo "Launching specialized review agents in parallel:"
+echo "  • Pattern Recognition Specialist"
+echo "  • Architecture Strategist"
+echo "  • Performance Oracle"
+echo "  • Security Sentinel"
+echo "  • Data Integrity Guardian"
 echo ""
-echo "This workflow launches multiple specialized review agents in parallel."
+echo "This may take several minutes..."
+echo ""
+
+# Launch all agents in parallel using Task tool
+# Example: Task(subagent_type="pattern-recognition-specialist", prompt="Review PR #$PR_NUM")
+# After all complete, synthesize findings and present comprehensive summary
 
 echo ""
 ```
