@@ -11,7 +11,7 @@ When the user types the `/istari-update` command, sync istari command files and 
 This command automates the process of updating istari commands and skills in your Claude environment. It copies all command files and skills from the istari repository to your specified .claude directory.
 
 **What gets synced:**
-- Command files (istari-plan, istari-work, istari-setup, istari-update, istari-upgrade, istari-review, istari-skill-builder)
+- Command files (istari-plan, istari-work, istari-setup, istari-update, istari-upgrade, istari-review, istari-skill-builder, istari-help)
 - Skills (uncle-bob-clean-code)
 
 **Use cases:**
@@ -103,7 +103,7 @@ echo "From: $ISTARI_REPO"
 echo "To:   $TARGET"
 echo ""
 echo "Will copy:"
-echo "  • 7 command files → $TARGET/commands/"
+echo "  • 8 command files → $TARGET/commands/"
 echo "  • 1 skill file    → $TARGET/skills/istari/"
 echo ""
 read -p "Proceed with sync? (y/n) " -n 1 -r
@@ -133,6 +133,7 @@ COMMANDS=(
   "istari-upgrade.md"
   "istari-review.md"
   "istari-skill-builder.md"
+  "istari-help.md"
 )
 
 for cmd in "${COMMANDS[@]}"; do
@@ -292,7 +293,7 @@ From: /Users/username/jacob-dev/istari
 To:   /Users/username/my-app/.claude
 
 Will copy:
-  • 7 command files → /Users/username/my-app/.claude/commands/
+  • 8 command files → /Users/username/my-app/.claude/commands/
   • 1 skill file    → /Users/username/my-app/.claude/skills/istari/
 
 Proceed with sync? (y/n) y
@@ -306,6 +307,7 @@ Proceed with sync? (y/n) y
 ✅ istari-upgrade.md
 ✅ istari-review.md
 ✅ istari-skill-builder.md
+✅ istari-help.md
 
 ━━━ Copying Skill Files ━━━
 
@@ -314,7 +316,7 @@ Proceed with sync? (y/n) y
 ━━━ Verifying Installation ━━━
 
 ✅ Commands installed in: /Users/username/my-app/.claude/commands/
-   Files: 7 istari command(s)
+   Files: 8 istari command(s)
 ✅ Skills installed in: /Users/username/my-app/.claude/skills/istari/
    Files: uncle-bob-clean-code.md
 
