@@ -310,7 +310,7 @@ cm reflect --json
 **Commit planning artifacts:**
 ```bash
 bd sync  # Commits beads to .beads/ directory
-git add .claude/learnings/ .beads/robot-plan.json
+# Note: .claude/learnings/ and docs/plans/ are local only (excluded by .gitignore)
 git commit -m "Planning: <JIRA-ID> - <summary>"
 git push
 ```

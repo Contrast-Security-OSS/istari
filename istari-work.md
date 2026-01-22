@@ -492,12 +492,7 @@ EOF
 cm reflect --json
 ```
 
-**Commit learnings:**
-```bash
-git add .claude/learnings/
-git commit -m "<JIRA-ID>: Document learnings from bead <bead-id>"
-git push
-```
+**Note:** Learnings in `.claude/learnings/` and plans in `docs/plans/` are local only (excluded by .gitignore). They are not committed to git.
 
 ### 9. Bead Completion & Cleanup
 
