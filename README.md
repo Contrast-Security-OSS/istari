@@ -35,7 +35,7 @@ Turn Claude into a self-directed software development team that plans features, 
 
 ## Executive Summary
 
-Istari is a complete AI-driven software development workflow built on Claude Code. It provides three slash commands that transform feature requests into production-ready code through:
+Istari is a complete AI-driven software development workflow built on Claude Code. It provides eight slash commands that transform feature requests into production-ready code through:
 
 - **Intelligent decomposition** of Jira tickets into dependency-aware tasks ("beads")
 - **Parallel autonomous execution** by multiple AI agents coordinating via message passing
@@ -86,28 +86,48 @@ This toolchain enables **autonomous multi-agent execution** where multiple Claud
 
 ### 1. Install Istari Commands
 
-Create a `.claude/commands` folder in the **parent directory** of your project folders:
-
+**Option A: Clone the repository (recommended)**
 ```bash
-# If your projects are in ~/projects/*, create:
+# Clone istari repository
+cd ~/your-workspace
+git clone https://github.com/Contrast-Security-OSS/istari.git
+
+# Use istari-update to install commands
+cd istari
+/istari-update ~/.claude
+```
+
+**Option B: Manual download**
+```bash
+# Create .claude/commands directory in parent of your projects
 cd ~
 mkdir -p .claude/commands
 
-# Clone or download the istari command files
+# Download all 8 command files
 cd .claude/commands
-curl -O https://raw.githubusercontent.com/your-org/istari/main/istari-setup.md
-curl -O https://raw.githubusercontent.com/your-org/istari/main/istari-plan.md
-curl -O https://raw.githubusercontent.com/your-org/istari/main/istari-work.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-setup.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-plan.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-work.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-update.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-upgrade.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-review.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-skill-builder.md
+curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-help.md
 ```
 
 **Why parent directory?** Claude Code searches upward from your project for `.claude/commands`, making these commands available across all your projects from a single location.
 
 ### 2. Verify Installation
 
-Open Claude Code in any project and type `/` - you should see:
-- `/istari-setup`
-- `/istari-plan`
-- `/istari-work`
+Open Claude Code in any project and type `/` - you should see all 8 commands:
+- `/istari-setup` - Install and verify prerequisites
+- `/istari-plan` - Decompose tickets into beads
+- `/istari-work` - Execute beads autonomously
+- `/istari-update` - Sync commands from repo
+- `/istari-upgrade` - Update tool versions
+- `/istari-review` - Comprehensive PR review
+- `/istari-skill-builder` - Generate skills from patterns
+- `/istari-help` - Display command reference
 
 ### 3. Run Setup Command
 
@@ -299,10 +319,129 @@ This will interactively install all toolchain components (see detailed breakdown
 - Review critical issues: Max 2 fix attempts, then asks user for override
 - Out-of-scope review issues: Offers to create separate cleanup bead
 
-**When to run:** 
+**When to run:**
 - After `/istari-plan` creates beads
 - Can run multiple instances for parallel execution
 - Continues autonomously until all beads complete or user intervention needed
+
+---
+
+### `/istari-update` - Sync Commands and Skills
+
+**What it does:** Updates istari commands and skills in a target `.claude` directory.
+
+**Input:**
+```
+/istari-update
+/istari-update ~/my-project/.claude
+```
+
+**Workflow:**
+1. Verifies running from istari repository
+2. Prompts for target .claude directory (or uses provided path)
+3. Validates target is a .claude directory
+4. Copies all 8 command files to target/commands/
+5. Copies skills to target/skills/istari/
+6. Verifies installation
+
+**Use cases:**
+- After pulling updates to istari repository
+- Setting up istari in a new project
+- Resetting commands to repo versions
+
+**When to run:** After updating the istari repository to get latest command versions.
+
+---
+
+### `/istari-upgrade` - Smart Version Management
+
+**What it does:** Detects installed tool versions and offers semantic version upgrades.
+
+**Workflow:**
+1. Scans for installed tools (cargo, npm, brew, Claude plugins)
+2. Queries registries for latest versions
+3. Parses and compares semantic versions
+4. Categorizes updates as patch/minor/major
+5. Interactive prompts per category (patch → minor → major)
+6. Applies selected upgrades
+
+**Features:**
+- Semantic version intelligence (understands 1.2.3 → 1.2.4 is patch)
+- Risk-based categorization (patch = low risk, major = breaking)
+- Optional lock file snapshot before upgrades
+- Supports: cargo crates, npm packages, brew formulas, Claude plugins
+
+**When to run:** Monthly maintenance or when tools feel outdated.
+
+---
+
+### `/istari-review` - Comprehensive PR Review
+
+**What it does:** Orchestrates 5 code review tools on a GitHub PR.
+
+**Input:**
+```
+/istari-review https://github.com/org/repo/pull/123
+```
+
+**Review tools:**
+1. Claude's built-in `/review`
+2. Claude's built-in `/security-review`
+3. Superpowers code review
+4. Compound Engineering review agents
+5. Uncle Bob Clean Code review (Java files only)
+
+**Workflow:**
+1. Parses PR URL and fetches metadata via gh CLI
+2. Identifies Java files for Uncle Bob review
+3. Runs all reviews sequentially
+4. Displays results on screen with clear section headers
+5. No files written (all output to console)
+
+**When to run:** Before merging a PR to catch issues across multiple dimensions.
+
+---
+
+### `/istari-skill-builder` - AI-Powered Skill Generation
+
+**What it does:** Analyzes work patterns and generates personalized Claude skills.
+
+**Data sources:**
+- `.claude/learnings/` - Execution reality (what actually happened)
+- `docs/plans/` - Design intent (what was planned)
+- `cass_memory_system` - Historical knowledge (what we know works)
+
+**Workflow:**
+1. Collects data from all sources (last 30-90 days)
+2. AI analyzes patterns and detects repeated workflows (3+ occurrences)
+3. Scores patterns by frequency, complexity, automation potential
+4. **Early rejection:** User decides which candidates to generate
+5. AI generates complete skill markdown files with YAML frontmatter
+6. **Iterative editing:** User requests changes, AI applies, repeat
+7. **Late rejection:** User approves or rejects final version
+8. Installs approved skills to `~/.claude/skills/` (local only)
+
+**Features:**
+- Two-stage rejection (before and after generation)
+- Natural language edit requests
+- Installs locally (not in istari repo)
+- Skills ready to use immediately
+
+**When to run:** Monthly or when you notice repeated manual workflows.
+
+---
+
+### `/istari-help` - Command Reference
+
+**What it does:** Displays comprehensive help for all istari commands.
+
+**Output:**
+- Command descriptions
+- Usage examples
+- Typical workflow guide
+- Getting started sequence
+
+**When to run:** Anytime you need a quick reference.
 
 ---
 

@@ -20,6 +20,7 @@ This command performs a comprehensive health check of your AI coding environment
 - Oracles (copilot) - **Configured with maxTokens: 8192**
 - Claude Code configuration - **maxTokens: 200000 for extended context**
 - Claude Code plugins (Superpowers, Compound Engineering) - **Interactive installation**
+- Claude Code skills (uncle-bob-clean-code) - **Java-focused Clean Code review**
 - MCP servers (Context7, Atlassian) - **Interactive installation with API key setup**
 
 ## Setup Verification Workflow
@@ -781,6 +782,51 @@ enabled = [
 - Provides interactive prompts for blocked operations
 - Zero performance overhead when commands are safe
 - Can be temporarily bypassed with environment variables when needed
+
+**Istari Skills:**
+```bash
+echo "📚 Istari Skills:"
+echo ""
+
+# Determine istari repo location
+if [ -f "istari-setup.md" ]; then
+  ISTARI_REPO=$(pwd)
+elif [ -f ".claude/commands/istari-setup.md" ]; then
+  ISTARI_REPO=$(dirname $(dirname $(pwd)/.claude))
+else
+  echo "⚠️  Cannot locate istari repository"
+  echo "   Please run from istari repo or project with istari commands"
+  ISTARI_REPO=""
+fi
+
+if [ -n "$ISTARI_REPO" ]; then
+  # Check if uncle-bob-clean-code skill is installed
+  if [ -f ~/.claude/skills/istari/uncle-bob-clean-code.md ]; then
+    echo "✅ uncle-bob-clean-code skill: installed"
+  else
+    echo "❌ uncle-bob-clean-code skill: Not installed"
+
+    if [ -f "$ISTARI_REPO/uncle-bob-clean-code-skill.md" ]; then
+      echo ""
+      echo "Installing uncle-bob-clean-code skill..."
+      echo "This skill provides Java-focused Clean Code review following Robert C. Martin principles."
+      read -p "Install uncle-bob-clean-code skill now? (y/n) " -n 1 -r
+      echo ""
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        mkdir -p ~/.claude/skills/istari
+        cp "$ISTARI_REPO/uncle-bob-clean-code-skill.md" ~/.claude/skills/istari/uncle-bob-clean-code.md
+        echo "✅ uncle-bob-clean-code skill installed!"
+        echo "   Skill location: ~/.claude/skills/istari/uncle-bob-clean-code.md"
+        echo "   Invocation: /istari:uncle-bob-clean-code"
+      fi
+    else
+      echo "⚠️  Source file not found: $ISTARI_REPO/uncle-bob-clean-code-skill.md"
+      echo "   Run from istari repository or pull latest changes"
+    fi
+  fi
+fi
+echo ""
+```
 
 ### 8. MCP Servers
 
