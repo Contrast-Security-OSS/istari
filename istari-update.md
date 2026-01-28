@@ -13,6 +13,7 @@ This command automates the process of updating istari commands and skills in you
 **What gets synced:**
 - Command files (istari-plan, istari-work, istari-setup, istari-update, istari-upgrade, istari-review, istari-skill-builder, istari-help)
 - Skills (uncle-bob-clean-code)
+- Reference files (comments, error-handling, functions, naming, solid, testing)
 
 **Use cases:**
 - After pulling updates to the istari repository
@@ -105,6 +106,7 @@ echo ""
 echo "Will copy:"
 echo "  • 8 command files → $TARGET/commands/"
 echo "  • 1 skill file    → $TARGET/skills/istari/"
+echo "  • 6 reference files → $TARGET/skills/istari/references/"
 echo ""
 read -p "Proceed with sync? (y/n) " -n 1 -r
 echo ""
@@ -168,7 +170,38 @@ fi
 echo ""
 ```
 
-### 8. Verify Installation (Optional)
+### 8. Copy Reference Files
+
+```bash
+echo "━━━ Copying Reference Files ━━━"
+echo ""
+
+# Create references directory
+mkdir -p "$TARGET/skills/istari/references"
+
+# Copy reference files
+REFERENCES=(
+  "comments.md"
+  "error-handling.md"
+  "functions.md"
+  "naming.md"
+  "solid.md"
+  "testing.md"
+)
+
+for ref in "${REFERENCES[@]}"; do
+  if [ -f "$ISTARI_REPO/references/$ref" ]; then
+    cp "$ISTARI_REPO/references/$ref" "$TARGET/skills/istari/references/"
+    echo "✅ $ref"
+  else
+    echo "⚠️  $ref (not found, skipping)"
+  fi
+done
+
+echo ""
+```
+
+### 9. Verify Installation (Optional)
 
 ```bash
 echo "━━━ Verifying Installation ━━━"
@@ -190,10 +223,19 @@ else
   echo "⚠️  Skills directory may not be configured correctly"
 fi
 
+# Check if references were installed
+if [ -d "$TARGET/skills/istari/references" ]; then
+  REF_COUNT=$(ls -1 $TARGET/skills/istari/references/*.md 2>/dev/null | wc -l | xargs)
+  echo "✅ References installed in: $TARGET/skills/istari/references/"
+  echo "   Files: $REF_COUNT reference file(s)"
+else
+  echo "⚠️  References directory may not be configured correctly"
+fi
+
 echo ""
 ```
 
-### 9. Suggest Running Setup
+### 10. Suggest Running Setup
 
 ```bash
 echo "━━━ Next Steps ━━━"
@@ -217,7 +259,7 @@ if [[ "$TARGET" == *"$(pwd)"* ]] || [[ "$(pwd)" == *"$TARGET"* ]]; then
 fi
 ```
 
-### 10. Summary Report
+### 11. Summary Report
 
 ```bash
 echo ""
@@ -230,6 +272,7 @@ echo "Synced to:   $TARGET"
 echo ""
 echo "Commands:    $TARGET/commands/"
 echo "Skills:      $TARGET/skills/istari/"
+echo "References:  $TARGET/skills/istari/references/"
 echo ""
 ```
 
@@ -295,6 +338,7 @@ To:   /Users/username/my-app/.claude
 Will copy:
   • 8 command files → /Users/username/my-app/.claude/commands/
   • 1 skill file    → /Users/username/my-app/.claude/skills/istari/
+  • 6 reference files → /Users/username/my-app/.claude/skills/istari/references/
 
 Proceed with sync? (y/n) y
 
@@ -313,12 +357,23 @@ Proceed with sync? (y/n) y
 
 ✅ uncle-bob-clean-code.md
 
+━━━ Copying Reference Files ━━━
+
+✅ comments.md
+✅ error-handling.md
+✅ functions.md
+✅ naming.md
+✅ solid.md
+✅ testing.md
+
 ━━━ Verifying Installation ━━━
 
 ✅ Commands installed in: /Users/username/my-app/.claude/commands/
    Files: 8 istari command(s)
 ✅ Skills installed in: /Users/username/my-app/.claude/skills/istari/
    Files: uncle-bob-clean-code.md
+✅ References installed in: /Users/username/my-app/.claude/skills/istari/references/
+   Files: 6 reference file(s)
 
 ━━━ Next Steps ━━━
 
