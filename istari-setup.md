@@ -14,7 +14,7 @@ This command performs a comprehensive health check of your AI coding environment
 - Language runtimes (bun, rust, go, uv)
 - CLI utilities (ripgrep, fzf, lazygit, ast-grep, jq)
 - Git infrastructure (git, gh)
-- AI coding tools (beads, abacus, beads_viewer, ultimate_bug_scanner, cass_memory_system, coding_agent_session_search)
+- AI coding tools (beads_rust, abacus, beads_viewer, ultimate_bug_scanner, cass_memory_system, coding_agent_session_search)
 - Agent coordination (mcp_agent_mail)
 - Command protection (destructive_command_guard) - **Blocks destructive git, filesystem, database operations**
 - Oracles (copilot) - **Configured with maxTokens: 8192**
@@ -317,16 +317,16 @@ fi
 
 ### 4. AI Coding Tools
 
-**beads (Task management):**
+**beads_rust (Task management):**
 ```bash
-if command -v bd &> /dev/null; then
-  echo "✅ beads: $(bd --version 2>/dev/null || echo 'installed')"
+if command -v br &> /dev/null; then
+  echo "✅ beads_rust: $(br --version 2>/dev/null || echo 'installed')"
 else
-  echo "❌ beads: Not installed"
-  echo "Install: cargo install --git https://github.com/steveyegge/beads"
-  read -p "Install beads? (y/n) " -n 1 -r
+  echo "❌ beads_rust: Not installed"
+  echo "Install: cargo install --git https://github.com/Dicklesworthstone/beads_rust.git"
+  read -p "Install beads_rust? (y/n) " -n 1 -r
   if [[ $REPLY =~ ^[Yy]$ ]]; then
-    cargo install --git https://github.com/steveyegge/beads
+    cargo install --git https://github.com/Dicklesworthstone/beads_rust.git
   fi
 fi
 ```
@@ -935,7 +935,7 @@ command -v gh &>/dev/null && echo "  ✅ gh" || echo "  ❌ gh"
 
 echo ""
 echo "AI Coding Tools:"
-command -v bd &>/dev/null && echo "  ✅ beads" || echo "  ❌ beads"
+command -v br &>/dev/null && echo "  ✅ beads_rust" || echo "  ❌ beads_rust"
 command -v bv &>/dev/null && echo "  ✅ beads_viewer" || echo "  ❌ beads_viewer"
 command -v abacus &>/dev/null && echo "  ✅ abacus" || echo "  ❌ abacus"
 command -v ubs &>/dev/null && echo "  ✅ ultimate_bug_scanner" || echo "  ❌ ultimate_bug_scanner"
@@ -981,7 +981,7 @@ command -v sg &>/dev/null && ((INSTALLED++))
 command -v jq &>/dev/null && ((INSTALLED++))
 command -v git &>/dev/null && ((INSTALLED++))
 command -v gh &>/dev/null && ((INSTALLED++))
-command -v bd &>/dev/null && ((INSTALLED++))
+command -v br &>/dev/null && ((INSTALLED++))
 command -v bv &>/dev/null && ((INSTALLED++))
 command -v abacus &>/dev/null && ((INSTALLED++))
 command -v ubs &>/dev/null && ((INSTALLED++))
@@ -1008,7 +1008,7 @@ else
   echo "⚠️  Some tools are missing. Review the checks above."
   echo ""
   echo "Critical for /istari-plan:"
-  echo "  - beads, beads_viewer (task management)"
+  echo "  - beads_rust, beads_viewer (task management)"
   echo "  - Superpowers, Compound Engineering (planning)"
   echo ""
   echo "Critical for /istari-work:"
@@ -1086,10 +1086,10 @@ cm init
 
 ### Beads Initialization
 
-Initialize beads in existing project:
+Initialize beads_rust in existing project:
 ```bash
 cd ~/your-project
-bd init
+br init
 ```
 
 This creates `.beads/` directory for task tracking.
@@ -1193,7 +1193,7 @@ else
 fi
 
 # AI coding tools (cargo only - no brew formulae available)
-cargo install --git https://github.com/steveyegge/beads
+cargo install --git https://github.com/Dicklesworthstone/beads_rust.git
 cargo install --git https://github.com/Dicklesworthstone/beads_viewer
 cargo install --git https://github.com/ChrisEdwards/abacus
 cargo install --git https://github.com/Dicklesworthstone/ultimate_bug_scanner
@@ -1242,6 +1242,6 @@ Setup is complete when:
 - ✅ Atlassian MCP server is configured and authenticated (run `/mcp` if needed)
 - ✅ Copilot config file exists with preferred model and maxTokens: 8192
 - ✅ Claude Code config has maxTokens: 200000 set
-- ✅ Test project has `.beads/` directory after `bd init`
+- ✅ Test project has `.beads/` directory after `br init`
 
 **Ready to code!** Run `/istari-plan <description>` to start your first planning session.

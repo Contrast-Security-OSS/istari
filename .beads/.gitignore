@@ -10,6 +10,7 @@ daemon.lock
 daemon.log
 daemon.pid
 bd.sock
+br.sock
 
 # Local version tracking (prevents upgrade notification spam after git ops)
 .local_version
@@ -17,6 +18,7 @@ bd.sock
 # Legacy database files
 db.sqlite
 bd.db
+br.db
 
 # Merge artifacts (temporary files from 3-way merge)
 beads.base.jsonl
