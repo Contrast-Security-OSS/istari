@@ -187,11 +187,16 @@ br create --title="<step-description>" \
 
 **Add dependencies between beads:**
 ```bash
-br dep add <bead-id> depends-on <dependency-bead-id>
+br dep add <ISSUE> <DEPENDS_ON> --type blocks
 ```
 
+Where:
+- `<ISSUE>` is the bead that will depend on something
+- `<DEPENDS_ON>` is the bead being depended on (the blocker)
+- `--type blocks` means the dependency type (default if omitted)
+
 Example dependency patterns:
-- Tests depend on implementation
+- Tests depend on implementation: `br dep add AUTH-789-tests AUTH-789-backend --type blocks`
 - Integration depends on unit work
 - Documentation depends on feature completion
 

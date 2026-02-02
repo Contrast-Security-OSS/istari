@@ -6,6 +6,29 @@ description: Interactive setup verification for istari-plan and istari-work prer
 
 When the user types the `/istari-setup` command, verify all required tools and plugins are installed and properly configured.
 
+## Migrating from bd (Original Beads)
+
+**If you have an existing beads (bd) installation:**
+
+The istari system uses `beads_rust` (command: `br`), which is the Rust rewrite of the original Python `beads` (command: `bd`). To migrate your existing issues:
+
+```bash
+# Import existing bd issues into br
+br sync --import-only
+```
+
+This command:
+- Reads your existing `.beads/issues.jsonl` file
+- Imports all issues into the new `br` database
+- Preserves issue IDs, status, dependencies, and metadata
+- Does NOT modify your original data
+
+After import, you can use `br` commands alongside or instead of `bd`. Both tools share the same `.beads/` directory structure.
+
+**Learn more:** [beads_rust migration guide](https://github.com/Dicklesworthstone/beads_rust?tab=readme-ov-file#q-how-do-i-migrate-from-the-original-beads)
+
+---
+
 ## Overview
 
 This command performs a comprehensive health check of your AI coding environment, ensuring all prerequisites for `/istari-plan` and `/istari-work` are satisfied.
