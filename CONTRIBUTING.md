@@ -37,7 +37,7 @@ Istari requires several tools for full functionality:
 
 ```bash
 # Core dependencies (installed via istari-setup):
-# - beads & beads_viewer (task management)
+# - beads_rust & beads_viewer (task management)
 # - mcp_agent_mail (agent coordination)
 # - ultimate_bug_scanner (security scanning)
 # - Context7 (documentation lookup)
@@ -63,23 +63,23 @@ Istari requires several tools for full functionality:
 
 ### Beads Task Management
 
-Istari uses the **beads** workflow for task tracking:
+Istari uses the **beads_rust** workflow for task tracking:
 
 ```bash
 # See available work
-bd ready
+br ready
 
 # Create a new task
-bd create --title="Add new feature" --type=task --priority=1
+br create --title="Add new feature" --type=task --priority=1
 
 # Start working on a task
-bd update <bead-id> --status=in_progress
+br update <bead-id> --status=in_progress
 
 # Close completed task
-bd close <bead-id>
+br close <bead-id>
 
 # Sync beads to git
-bd sync
+br sync
 ```
 
 ### Code Quality
@@ -127,8 +127,8 @@ bd sync
    - Test commands interactively
    - Track work with beads:
      ```bash
-     bd create --title="Your feature"
-     bd update <bead-id> --status=in_progress
+     br create --title="Your feature"
+     br update <bead-id> --status=in_progress
      ```
 
 3. **Commit Changes**
@@ -137,8 +137,8 @@ bd sync
    git commit -m "Add feature: description of changes"
 
    # Close associated beads
-   bd close <bead-id>
-   bd sync
+   br close <bead-id>
+   br sync
    ```
 
 4. **Push and Create PR**
@@ -160,12 +160,12 @@ bd sync
 ```bash
 # Full development cycle
 /istari-setup              # Verify prerequisites
-bd create --title="..."    # Create task
-bd update <id> --status=in_progress  # Start work
+br create --title="..."    # Create task
+br update <id> --status=in_progress  # Start work
 # ... make changes ...
 git commit                 # Commit changes
-bd close <id>              # Mark complete
-bd sync                    # Sync beads to git
+br close <id>              # Mark complete
+br sync                    # Sync beads to git
 ```
 
 ### Testing New Commands
@@ -198,13 +198,13 @@ cd /path/to/istari
 
 ```bash
 # Check sync status
-bd sync --status
+br sync --status
 
 # Pull latest from main
-bd sync --from-main
+br sync --from-main
 
 # Run beads doctor for diagnostics
-bd doctor
+br doctor
 ```
 
 #### Prerequisites Not Installed

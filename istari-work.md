@@ -226,7 +226,7 @@ Examples:
 
 **Update bead status:**
 ```bash
-bd update <bead-id> --status=in_progress
+br update <bead-id> --status=in_progress
 ```
 
 **Query Context7 for background knowledge** (when needed):
@@ -498,7 +498,7 @@ cm reflect --json
 
 **Close completed bead:**
 ```bash
-bd close <bead-id> --reason "Implementation complete, tests passing, reviews clean"
+br close <bead-id> --reason "Implementation complete, tests passing, reviews clean"
 ```
 
 **Release file reservations:**
@@ -508,7 +508,7 @@ am release "<file-pattern>" --project $(pwd)
 
 **Sync beads to git:**
 ```bash
-bd sync
+br sync
 ```
 
 **Notify via agent mail:**
@@ -521,7 +521,7 @@ am send --to all_agents --thread <JIRA-ID> \
 
 **Check for more open beads:**
 ```bash
-bd list --status=open --filter="jira:<JIRA-ID>"
+br list --status=open --filter="jira:<JIRA-ID>"
 ```
 
 **If more beads exist:**

@@ -166,7 +166,7 @@ This adds:
 
 For each logical unit of work, create a bead:
 ```bash
-bd create --title="<step-description>" \
+br create --title="<step-description>" \
   --type=<task|bug|feature> \
   --priority=<0-4> \
   --description="<detailed-description>"
@@ -187,11 +187,16 @@ bd create --title="<step-description>" \
 
 **Add dependencies between beads:**
 ```bash
-bd dep add <bead-id> depends-on <dependency-bead-id>
+br dep add <ISSUE> <DEPENDS_ON> --type blocks
 ```
 
+Where:
+- `<ISSUE>` is the bead that will depend on something
+- `<DEPENDS_ON>` is the bead being depended on (the blocker)
+- `--type blocks` means the dependency type (default if omitted)
+
 Example dependency patterns:
-- Tests depend on implementation
+- Tests depend on implementation: `br dep add AUTH-789-tests AUTH-789-backend --type blocks`
 - Integration depends on unit work
 - Documentation depends on feature completion
 
@@ -309,7 +314,7 @@ cm reflect --json
 
 **Commit planning artifacts:**
 ```bash
-bd sync  # Commits beads to .beads/ directory
+br sync  # Commits beads to .beads/ directory
 # Note: .claude/learnings/ and docs/plans/ are local only (excluded by .gitignore)
 git commit -m "Planning: <JIRA-ID> - <summary>"
 git push
