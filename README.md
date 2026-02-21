@@ -84,40 +84,48 @@ This toolchain enables **autonomous multi-agent execution** where multiple Claud
 
 ## Setup Instructions
 
-### 1. Install Istari Commands
+### 1. Clone the Repository
 
-**Option A: Clone the repository (recommended)**
 ```bash
-# Clone istari repository
-cd ~/your-workspace
-git clone https://github.com/Contrast-Security-OSS/istari.git
-
-# Use istari-update to install commands
-cd istari
-/istari-update ~/.claude
-```
-
-**Option B: Manual download**
-```bash
-# Create .claude/commands directory in parent of your projects
+# Clone istari repository to a permanent location
 cd ~
-mkdir -p .claude/commands
-
-# Download all 8 command files
-cd .claude/commands
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-setup.md
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-plan.md
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-work.md
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-update.md
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-upgrade.md
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-review.md
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-skill-builder.md
-curl -O https://raw.githubusercontent.com/Contrast-Security-OSS/istari/main/istari-help.md
+git clone https://github.com/Contrast-Security-OSS/istari.git
 ```
 
-**Why parent directory?** Claude Code searches upward from your project for `.claude/commands`, making these commands available across all your projects from a single location.
+The installation script (step 3 below) will automatically create symlinks to `~/.claude/commands` for all istari commands.
 
-### 2. Verify Installation
+**Benefits of symlinks:**
+- Updates are instant: Just `git pull` in `~/istari` to get latest commands
+- Easy to contribute: Edit files in `~/istari`, commit, and push
+- Single source of truth: No need to sync copies across projects
+
+**Why ~/.claude/commands?** Claude Code searches upward from your project for `.claude/commands`, making these commands available across all your projects from a single location.
+
+### 2. Install Prerequisites
+
+**Automated installation (recommended):**
+```bash
+# Run from the istari repository
+cd ~/istari
+./install-prerequisites.sh
+```
+
+This script automatically:
+- Installs and configures all required tools (language runtimes, CLI utilities, AI coding tools)
+- Creates symlinks in `~/.claude/commands` for all 8 istari commands
+- Configures Claude Code and Copilot settings
+- Sets up PATH variables
+
+**Interactive installation:**
+
+Alternatively, run the interactive setup command in Claude Code:
+```
+/istari-setup
+```
+
+This will guide you through installing each component with prompts for configuration. Use this if you prefer manual control or need to troubleshoot individual tools. Note: You'll still need to create symlinks manually if you use this approach.
+
+### 3. Verify Installation
 
 Open Claude Code in any project and type `/` - you should see all 8 commands:
 - `/istari-setup` - Install and verify prerequisites
@@ -129,14 +137,7 @@ Open Claude Code in any project and type `/` - you should see all 8 commands:
 - `/istari-skill-builder` - Generate skills from patterns
 - `/istari-help` - Display command reference
 
-### 3. Run Setup Command
-
-In Claude Code, run:
-```
-/istari-setup
-```
-
-This will interactively install all toolchain components (see detailed breakdown below).  This only needs to be run once unless a tool installation needs to be repaired.  You are then ready to use `/istari-plan` to plan new work and `/istari-work` to get one or more Claude Code instances working on the plan in your project.
+**You are now ready to use `/istari-plan` to plan new work and `/istari-work` to get one or more Claude Code instances working on the plan in your project.**
 
 ## Command Reference
 
@@ -328,7 +329,7 @@ This will interactively install all toolchain components (see detailed breakdown
 
 ### `/istari-update` - Sync Commands and Skills
 
-**What it does:** Updates istari commands and skills in a target `.claude` directory.
+**What it does:** Copies istari commands and skills to a target `.claude` directory.
 
 **Input:**
 ```
@@ -345,11 +346,13 @@ This will interactively install all toolchain components (see detailed breakdown
 6. Verifies installation
 
 **Use cases:**
-- After pulling updates to istari repository
-- Setting up istari in a new project
-- Resetting commands to repo versions
+- Setting up istari in a project-specific `.claude` directory
+- Creating a snapshot of commands for a specific project
+- When symlinks are not desired or supported
 
-**When to run:** After updating the istari repository to get latest command versions.
+**Note:** If you used the recommended symlink installation to `~/.claude/commands`, you don't need this command. Simply `git pull` in `~/istari` to update your commands.
+
+**When to run:** When setting up project-specific command copies instead of using global symlinks.
 
 ---
 
@@ -497,9 +500,14 @@ Both systems are **automatically consulted** at the start of each `/istari-plan`
 ## Troubleshooting
 
 **Commands not showing in `/` menu:**
-- Verify `.claude/commands` is in parent directory of your projects
+- Verify `~/.claude/commands` contains istari command files (or symlinks)
 - Restart Claude Code
 - Check file permissions on command files
+- If using symlinks, verify they point to correct location: `ls -la ~/.claude/commands/`
+
+**Updating commands:**
+- With symlinks (recommended): `cd ~/istari && git pull`
+- With copied files: Re-run `/istari-update` or manually copy new versions
 
 **Context7 API errors:**
 - Verify API key is valid at https://context7.com/dashboard
