@@ -304,7 +304,7 @@ copilot -p "Why is <specific-test> failing? Error: <error-message>" \
 **Run ultimate_bug_scanner:**
 ```bash
 git add <changed-files>
-ubs scan --staged
+ubs --staged
 ```
 
 **Fix any critical issues found:**
@@ -555,7 +555,7 @@ npm test  # or appropriate command
 
 **Scan entire feature branch:**
 ```bash
-git diff main..HEAD | ubs scan --diff
+ubs --git-diff
 ```
 
 **Review all commits in feature branch:**
@@ -751,7 +751,7 @@ User: /work
 [Writes failing test for TOTP generation]
 [Implements TOTP generation]
 [Tests pass]
-[Runs ubs scan - clean]
+[Runs ubs --staged - clean]
 [Runs all reviews - clean]
 [Commits work]
 [Documents learnings about TOTP patterns]
