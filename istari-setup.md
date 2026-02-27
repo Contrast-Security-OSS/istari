@@ -44,7 +44,7 @@ This command performs a comprehensive health check of your AI coding environment
 - Claude Code configuration - **maxTokens: 200000 for extended context**
 - Claude Code plugins (Superpowers, Compound Engineering) - **Interactive installation**
 - Claude Code skills (uncle-bob-clean-code) - **Java-focused Clean Code review**
-- MCP servers (Context7, Atlassian) - **Interactive installation with API key setup**
+- MCP servers (Sequential Thinking, Context7, Atlassian) - **Interactive installation with API key setup**
 
 ## Setup Verification Workflow
 
@@ -895,6 +895,33 @@ fi
 echo ""
 ```
 
+**Sequential Thinking MCP Server (Structured problem-solving):**
+```bash
+echo "📦 Sequential Thinking MCP Server:"
+echo ""
+
+# Check if Sequential Thinking is configured
+if grep -q "sequential-thinking" ~/.claude.json 2>/dev/null; then
+  echo "✅ Sequential Thinking: installed and configured"
+else
+  echo "❌ Sequential Thinking: Not installed"
+  echo ""
+  echo "Sequential Thinking provides structured, step-by-step problem-solving via MCP."
+  echo "It enables breaking down complex problems into manageable steps with support"
+  echo "for revisions, branching, and dynamic adjustment of reasoning depth."
+  echo ""
+  read -p "Install Sequential Thinking MCP server? (y/n) " -n 1 -r
+  echo ""
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Installing Sequential Thinking MCP server..."
+    claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking
+    echo ""
+    echo "✅ Sequential Thinking MCP server installed!"
+  fi
+fi
+echo ""
+```
+
 **Atlassian MCP Server (Jira/Confluence integration):**
 ```bash
 echo "📦 Atlassian MCP Server:"
@@ -981,6 +1008,7 @@ command -v dcg &>/dev/null && echo "  ✅ destructive_command_guard" || echo "  
 
 echo ""
 echo "MCP Servers:"
+grep -q "sequential-thinking" ~/.claude.json 2>/dev/null && echo "  ✅ Sequential Thinking" || echo "  ❌ Sequential Thinking"
 grep -q "context7" ~/.claude.json 2>/dev/null && echo "  ✅ Context7" || echo "  ❌ Context7"
 grep -q "atlassian" ~/.claude.json 2>/dev/null && echo "  ✅ Atlassian" || echo "  ❌ Atlassian"
 echo ""
@@ -1024,8 +1052,8 @@ if [ $INSTALLED -eq $TOTAL ]; then
   echo "🎉 All CLI tools installed!"
   echo ""
   echo "Next steps:"
-  echo "1. Verify Claude Code plugins (Superpowers, Compound Engineering, Context7)"
-  echo "2. Configure Atlassian MCP server in Claude Code settings"
+  echo "1. Verify Claude Code plugins (Superpowers, Compound Engineering)"
+  echo "2. Verify MCP servers (Sequential Thinking, Context7, Atlassian)"
   echo "3. Run '/istari-plan <ticket-or-description>' to start planning!"
 else
   echo "⚠️  Some tools are missing. Review the checks above."
@@ -1261,6 +1289,7 @@ Setup is complete when:
 - ✅ Superpowers plugin is installed in `~/.claude/plugins/cache/superpowers-marketplace/`
 - ✅ Compound Engineering is installed in `~/.claude/plugins/cache/every-marketplace/`
 - ✅ Destructive Command Guard (dcg) is installed and configured at `~/.config/dcg/config.toml`
+- ✅ Sequential Thinking MCP server is configured in `~/.claude.json`
 - ✅ Context7 MCP server is configured in `~/.claude.json`
 - ✅ Atlassian MCP server is configured and authenticated (run `/mcp` if needed)
 - ✅ Copilot config file exists with preferred model and maxTokens: 8192
