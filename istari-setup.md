@@ -660,11 +660,13 @@ if command -v dcg &> /dev/null; then
     cat > ~/.config/dcg/config.toml << 'EOF'
 [packs]
 enabled = [
+ "core.git",
+ "core.filesystem",
  "database.postgresql",
  "containers.docker"
 ]
 EOF
-    echo "✅ Config created (core.git and core.filesystem are enabled by default)"
+    echo "✅ Config created with essential protection packs"
   fi
 else
   echo "❌ dcg: Not installed"
@@ -786,8 +788,8 @@ The protection system uses modular "packs" that can be enabled/disabled in `~/.c
 ```toml
 [packs]
 enabled = [
- # core.git and core.filesystem are enabled by default (no config needed)
- # Add optional packs here as needed:
+ "core.git",                  # Blocks: git reset --hard, force push, branch -D
+ "core.filesystem",          # Blocks: rm -rf outside tmp dirs
  "database.postgresql",      # Blocks: DROP TABLE, TRUNCATE
  "database.mongodb",         # Blocks: dropDatabase, dropCollection
  "containers.docker",        # Blocks: docker rm, docker system prune
