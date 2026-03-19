@@ -430,8 +430,8 @@ fi
 
 **mcp_agent_mail (Agent coordination):**
 ```bash
-if command -v am &> /dev/null; then
-  echo "✅ mcp_agent_mail: CLI installed"
+if command -v am &> /dev/null || grep -q "mcp.agent.mail\|mcp_agent_mail" ~/.claude/settings.json 2>/dev/null; then
+  echo "✅ mcp_agent_mail: $(command -v am &>/dev/null && echo 'CLI installed' || echo 'configured as MCP server')"
 
   # Check if MCP server is running
   if curl -s http://localhost:8765/ &> /dev/null; then
@@ -660,8 +660,8 @@ if command -v dcg &> /dev/null; then
     cat > ~/.config/dcg/config.toml << 'EOF'
 [packs]
 enabled = [
- "git.destructive",
- "filesystem.dangerous",
+ "core.git",
+ "core.filesystem",
  "database.postgresql",
  "containers.docker"
 ]
@@ -689,8 +689,6 @@ else
     cat > ~/.config/dcg/config.toml << 'EOF'
 [packs]
 enabled = [
- "git.destructive",
- "filesystem.dangerous",
  "database.postgresql",
  "containers.docker"
 ]
@@ -707,8 +705,8 @@ echo "Configuring Claude Code PreToolUse hook..."
 SETTINGS_FILE="$HOME/.claude/settings.json"
 
 if [ -f "$SETTINGS_FILE" ]; then
-  # Check if dcg hook is already configured
-  if grep -q '"command".*"dcg"' "$SETTINGS_FILE"; then
+  # Check if dcg hook is already configured (matches both "dcg" and full paths like "/usr/local/bin/dcg")
+  if grep -q '"command".*dcg' "$SETTINGS_FILE"; then
     echo "✅ dcg hook already configured in Claude Code"
   else
     echo "⚠️  dcg installed but not configured as Claude Code hook"
@@ -790,12 +788,12 @@ The protection system uses modular "packs" that can be enabled/disabled in `~/.c
 ```toml
 [packs]
 enabled = [
- "git.destructive",          # Blocks: git reset --hard, git push --force
- "filesystem.dangerous",     # Blocks: rm -rf, dangerous deletes
+ "core.git",                  # Blocks: git reset --hard, force push, branch -D
+ "core.filesystem",          # Blocks: rm -rf outside tmp dirs
  "database.postgresql",      # Blocks: DROP TABLE, TRUNCATE
  "database.mongodb",         # Blocks: dropDatabase, dropCollection
  "containers.docker",        # Blocks: docker rm, docker system prune
- "kubernetes"                # Blocks: kubectl delete
+ "kubernetes.kubectl"        # Blocks: kubectl delete
 ]
 ```
 
@@ -895,20 +893,19 @@ fi
 echo ""
 ```
 
-**Sequential Thinking MCP Server (Structured problem-solving):**
+**Sequential Thinking MCP Server (Structured problem-solving, optional):**
 ```bash
-echo "📦 Sequential Thinking MCP Server:"
+echo "📦 Sequential Thinking MCP Server (optional - not required by istari):"
 echo ""
 
 # Check if Sequential Thinking is configured
 if grep -q "sequential-thinking" ~/.claude.json 2>/dev/null; then
   echo "✅ Sequential Thinking: installed and configured"
 else
-  echo "❌ Sequential Thinking: Not installed"
+  echo "➖ Sequential Thinking: Not installed (optional)"
   echo ""
   echo "Sequential Thinking provides structured, step-by-step problem-solving via MCP."
-  echo "It enables breaking down complex problems into manageable steps with support"
-  echo "for revisions, branching, and dynamic adjustment of reasoning depth."
+  echo "It is not used by istari commands but may be useful for general Claude work."
   echo ""
   read -p "Install Sequential Thinking MCP server? (y/n) " -n 1 -r
   echo ""
@@ -991,7 +988,7 @@ command -v abacus &>/dev/null && echo "  ✅ abacus" || echo "  ❌ abacus"
 command -v ubs &>/dev/null && echo "  ✅ ultimate_bug_scanner" || echo "  ❌ ultimate_bug_scanner"
 command -v cm &>/dev/null && echo "  ✅ cass_memory_system" || echo "  ❌ cass_memory_system"
 command -v cass &>/dev/null && echo "  ✅ coding_agent_session_search" || echo "  ❌ coding_agent_session_search"
-command -v am &>/dev/null && echo "  ✅ mcp_agent_mail" || echo "  ❌ mcp_agent_mail"
+(command -v am &>/dev/null || grep -q "mcp.agent.mail\|mcp_agent_mail" ~/.claude/settings.json 2>/dev/null) && echo "  ✅ mcp_agent_mail" || echo "  ❌ mcp_agent_mail"
 
 echo ""
 echo "Oracle CLIs:"
@@ -1008,7 +1005,7 @@ command -v dcg &>/dev/null && echo "  ✅ destructive_command_guard" || echo "  
 
 echo ""
 echo "MCP Servers:"
-grep -q "sequential-thinking" ~/.claude.json 2>/dev/null && echo "  ✅ Sequential Thinking" || echo "  ❌ Sequential Thinking"
+grep -q "sequential-thinking" ~/.claude.json 2>/dev/null && echo "  ✅ Sequential Thinking (optional)" || echo "  ➖ Sequential Thinking (optional, not installed)"
 grep -q "context7" ~/.claude.json 2>/dev/null && echo "  ✅ Context7" || echo "  ❌ Context7"
 grep -q "atlassian" ~/.claude.json 2>/dev/null && echo "  ✅ Atlassian" || echo "  ❌ Atlassian"
 echo ""
@@ -1038,7 +1035,7 @@ command -v abacus &>/dev/null && ((INSTALLED++))
 command -v ubs &>/dev/null && ((INSTALLED++))
 command -v cm &>/dev/null && ((INSTALLED++))
 command -v cass &>/dev/null && ((INSTALLED++))
-command -v am &>/dev/null && ((INSTALLED++))
+(command -v am &>/dev/null || grep -q "mcp.agent.mail\|mcp_agent_mail" ~/.claude/settings.json 2>/dev/null) && ((INSTALLED++))
 command -v copilot &>/dev/null && ((INSTALLED++))
 command -v dcg &>/dev/null && ((INSTALLED++))
 
@@ -1289,7 +1286,7 @@ Setup is complete when:
 - ✅ Superpowers plugin is installed in `~/.claude/plugins/cache/superpowers-marketplace/`
 - ✅ Compound Engineering is installed in `~/.claude/plugins/cache/every-marketplace/`
 - ✅ Destructive Command Guard (dcg) is installed and configured at `~/.config/dcg/config.toml`
-- ✅ Sequential Thinking MCP server is configured in `~/.claude.json`
+- ➖ Sequential Thinking MCP server (optional — not used by istari, useful for general Claude work)
 - ✅ Context7 MCP server is configured in `~/.claude.json`
 - ✅ Atlassian MCP server is configured and authenticated (run `/mcp` if needed)
 - ✅ Copilot config file exists with preferred model and maxTokens: 8192
