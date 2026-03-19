@@ -1,0 +1,18 @@
+{
+  "name": "istari",
+  "version": "1.0.0",
+  "description": "Autonomous AI coding agents — plan features with Jira integration, execute work in parallel with TDD and quality gates, and review PRs with multi-tool analysis",
+  "author": {
+    "name": "Contrast Security"
+  },
+  "repository": "https://github.com/Contrast-Security-OSS/istari",
+  "keywords": [
+    "agents",
+    "planning",
+    "tdd",
+    "jira",
+    "autonomous",
+    "code-review",
+    "beads"
+  ]
+}
