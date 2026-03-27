@@ -6,6 +6,29 @@ description: Interactive setup verification for istari-plan and istari-work prer
 
 When the user types the `/istari-setup` command, verify all required tools and plugins are installed and properly configured.
 
+## Quick Start: Automated Installation
+
+**For first-time setup, run the automated installer:**
+
+```bash
+# From the istari repository root
+./install-prerequisites.sh
+```
+
+This script automatically installs and configures all required tools for istari. It handles:
+- Language runtimes (bun, rust, go, uv)
+- CLI utilities (ripgrep, fzf, lazygit, ast-grep, jq)
+- Git infrastructure (git, gh)
+- AI coding tools (beads_rust, abacus, beads_viewer, ultimate_bug_scanner, cass_memory_system, mcp_agent_mail)
+- Command protection (destructive_command_guard)
+- Oracle CLIs (copilot)
+- PATH configuration
+- Claude Code and Copilot configuration
+
+After running the installer, use this `/istari-setup` command to verify everything is configured correctly.
+
+---
+
 ## Migrating from bd (Original Beads)
 
 **If you have an existing beads (bd) installation:**

@@ -10,6 +10,8 @@ When the user types the `/istari-upgrade` command, intelligently detect and upgr
 
 This command scans all istari-managed tools, compares installed versions against latest available versions, and categorizes updates by risk level (patch/minor/major). It then prompts for upgrades with appropriate safety considerations.
 
+**First-time installation:** If you haven't installed the prerequisites yet, run `./install-prerequisites.sh` from the istari repository root to set up all required tools. Then use this command for future upgrades.
+
 **No manifest file** - Uses semantic versioning intelligence rather than maintaining a central version registry.
 
 **Tools managed:**
